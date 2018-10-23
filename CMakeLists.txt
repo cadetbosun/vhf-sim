@@ -19,10 +19,7 @@ set(PROJECT_LICENSE "GPLv3")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 ### compiler check
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER_ID}")
-	message(STATUS "C Compiler  : ${CMAKE_C_COMPILER_ID}")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU|Clang|AppleClang")
 	message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER_ID}")
 	message(STATUS "C Compiler  : ${CMAKE_C_COMPILER_ID}")
 else()
@@ -74,6 +71,20 @@ foreach(filename ${TRANSLATION_FILES})
 		COMMAND ${Qt5_LUPDATE_EXECUTABLE} -no-obsolete -recursive ${CMAKE_CURRENT_SOURCE_DIR}/src -ts ${filename}
 		)
 endforeach()
+
+### TODO:temporary: Mac OSX
+if (APPLE)
+	#set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+	# identify MacOS bundle
+	set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+	set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
+	set(MACOSX_BUNDLE_LONG_VERSION_STRING ${PROJECT_VERSION})
+	set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+	set(MACOSX_BUNDLE_COPYRIGHT "Copyright (c) 2018 Mario Konrad. All rights reserved.")
+	#set(MACOSX_BUNDLE_GUI_IDENTIFIER ${IDENTIFIER})
+	#set(MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
+endif()
 
 ### sources
 add_subdirectory(src)
